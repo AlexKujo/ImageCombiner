@@ -47,7 +47,6 @@ class Image:
         self.type = self.detect_type()
 
     def detect_type(self):
-        """Определяет тип изображения."""
         # Проверяем, является ли изображение черно-белым
         if self.is_grayscale():
             return "contour"    
@@ -57,13 +56,11 @@ class Image:
             return "color"
 
     def is_grayscale(self):
-        """Проверяет, является ли изображение черно-белым."""
         # Проверяем, равны ли каналы B, G и R
         b, g, r = cv2.split(self.data)
         return np.allclose(b, g) and np.allclose(g, r)
 
     def is_highlight(self, color_ratio_threshold=0.7):
-        """Проверяет, является ли изображение изображением с выделением (highlight)."""
         
         # Разделяем изображение на каналы BGR
         b, g, r = cv2.split(self.data)
@@ -98,14 +95,6 @@ def get_contour_mask(image_data):
     return black_mask
 
 def blend_with_mask(base_image, overlay_image, mask):
-    """
-    Простое смешивание двух изображений с использованием маски.
-    
-    :param base_image: numpy.ndarray, базовое изображение
-    :param overlay_image: numpy.ndarray, накладываемое изображение
-    :param mask: numpy.ndarray, маска (где применять смешивание)
-    :return: numpy.ndarray, изображение с применённым смешиванием
-    """
     blended = cv2.addWeighted(base_image[mask > 0], 0.5, overlay_image[mask > 0], 0.5, 0)
     result = base_image.copy()
     result[mask > 0] = blended
